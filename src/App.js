@@ -1,25 +1,34 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import Launchpad from './components/Launchpad';
 import './App.css';
 
-function App() {
+export default function App() {
+  const [launchpads, setLaunchpads] = useState([]);
+
+  useEffect(() => {
+    fetch('https://api.spacexdata.com/v4/launchpads')
+    .then(resp => resp.json())
+    .then(data => {
+      setLaunchpads(data);
+    })
+  }, [])
+
+  // function sendData(id){
+  //   console.log(id)
+  // }
+
+  const lpElement = launchpads.map(pad => (
+    <Launchpad 
+      key={pad.id}
+      name={pad.name}
+      status={pad.status}
+      details={pad.details}
+      launches={pad.launches}/>
+  ))
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {lpElement}
     </div>
   );
 }
-
-export default App;
